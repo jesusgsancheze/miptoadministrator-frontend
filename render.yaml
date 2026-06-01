@@ -14,7 +14,7 @@ services:
       # Update this host if the backend service is named/renamed differently.
       - type: rewrite
         source: /api/*
-        destination: https://mipto-backend.onrender.com/api/*
+        destination: https://miptoadministrator-backend.onrender.com/api/*
       # SPA fallback for client-side routing — keep this LAST.
       - type: rewrite
         source: /*
