@@ -1,0 +1,21 @@
+# Render blueprint for the React + Vite frontend (its own repo).
+# The static site rewrites /api/* to the backend service, so the browser
+# only ever talks to one origin (no CORS). The frontend keeps its relative
+# `/api` calls unchanged.
+
+services:
+  - type: web
+    name: mipto-frontend
+    runtime: static
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    routes:
+      # Proxy API calls to the backend (server-side, so no CORS).
+      # Update this host if the backend service is named/renamed differently.
+      - type: rewrite
+        source: /api/*
+        destination: https://mipto-backend.onrender.com/api/*
+      # SPA fallback for client-side routing — keep this LAST.
+      - type: rewrite
+        source: /*
+        destination: /index.html
