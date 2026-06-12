@@ -110,11 +110,15 @@ export default function Payments() {
           { name: 'deductions', label: 'Deductions', type: 'deductions' },
           { name: 'date', label: 'Date', type: 'date' },
           { name: 'description', label: 'Description', type: 'textarea' },
-          { name: 'isRecurrent', label: 'Recurrent (fixed) payment', type: 'checkbox' },
-          { name: 'recurrentHalf', label: 'Recurs on', type: 'select', defaultValue: 'both', options: [
-              { value: '1', label: 'Start of month' },
-              { value: '2', label: 'Mid month' },
-              { value: 'both', label: 'Both halves' },
+          { name: 'recurrence', label: 'Recurrence',
+            type: 'select',
+            defaultValue: 'none',
+            deriveInitial: (r: any) => !r.isRecurrent ? 'none' : (r.recurrentHalf || 'both'),
+            options: [
+              { value: 'none', label: 'Not recurrent (one-off payment)' },
+              { value: '1', label: 'Recurs on start of month' },
+              { value: '2', label: 'Recurs on mid month' },
+              { value: 'both', label: 'Recurs on both halves' },
             ] },
           { name: 'isDone', label: 'Already paid', type: 'checkbox' },
         ]}

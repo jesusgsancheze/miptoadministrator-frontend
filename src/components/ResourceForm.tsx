@@ -12,6 +12,9 @@ export interface Field {
   optionsEndpoint?: string;
   optionLabel?: string; // property to display, default "name"
   defaultValue?: any;
+  /** When editing an existing record, compute the field's initial value from
+   *  the whole row. Useful when one form field maps to several stored fields. */
+  deriveInitial?: (row: any) => any;
 }
 
 interface Props {
@@ -26,6 +29,9 @@ function buildInitial(fields: Field[], initial: any) {
   const out: any = {};
   for (const f of fields) {
     let v = initial ? initial[f.name] : undefined;
+    if ((v === undefined || v === null) && initial && f.deriveInitial) {
+      v = f.deriveInitial(initial);
+    }
     if (v === undefined || v === null) {
       if (f.defaultValue !== undefined) v = f.defaultValue;
       else if (f.type === 'checkbox') v = false;
