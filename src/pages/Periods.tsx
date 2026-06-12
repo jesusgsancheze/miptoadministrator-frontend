@@ -112,8 +112,21 @@ export default function Periods() {
     setBusy(true);
     try {
       const r = await api.post('/periods/open', np);
+      const cloned = r.data?.clonedPayments ?? 0;
+      const reused = !!r.data?.reusedExisting;
+      window.alert(
+        (reused
+          ? 'Period already existed - re-checked it for recurrents. '
+          : 'Period opened. ') +
+          (cloned > 0
+            ? `${cloned} recurrent payment(s) carried forward.`
+            : 'No recurrent payments matched - confirm each one has Recurrence set to something other than "Not recurrent".'),
+      );
       load();
       setSelectedId(r.data?.period?._id || null);
+    } catch (e: any) {
+      const m = e?.response?.data?.message || 'Could not open period.';
+      window.alert(Array.isArray(m) ? m.join(', ') : m);
     } finally {
       setBusy(false);
     }
